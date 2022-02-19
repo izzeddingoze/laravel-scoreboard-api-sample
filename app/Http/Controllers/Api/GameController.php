@@ -46,8 +46,13 @@ class GameController extends Controller
      * @param  \App\Models\Game  $game
      * @return \Illuminate\Http\Response
      */
-    public function show(Game $game)
+    public function show($game_id)
     {
+        $game = Game::find($game_id);
+
+        if (!$game)
+            return response()->json(['error' => true, 'message' => "Game not found"], 201);
+
         return response()->json($game, 200);
     }
 
@@ -58,12 +63,22 @@ class GameController extends Controller
      * @param  \App\Models\Game  $game
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Game $game)
+    public function update(Request $request, $game_id)
     {
+
+        $game = Game::find($game_id);
+
+        if (!$game)
+            return response()->json(['error' => true, 'message' => "Game not found"], 201);
+
+
+
         $game->update([
             "title" => $request->title,
         ]);
-        return response()->json(['message' => "Oyun Güncellendi"], 201);
+
+
+        return response()->json(['success' => true ,'game'=> $game], 201);
     }
 
     /**
@@ -72,8 +87,14 @@ class GameController extends Controller
      * @param  \App\Models\Game  $game
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Game $game)
+    public function destroy($game_id)
     {
+
+        $game = Game::find($game_id);
+
+        if (!$game)
+            return response()->json(['error' => true, 'message' => "Game not found"], 201);
+
         $game->delete();
         return response()->json(['message' => "Oyun Silindi"], 200);
     }

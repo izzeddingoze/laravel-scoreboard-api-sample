@@ -45,8 +45,14 @@ class PlayerController extends Controller
      * @param  \App\Models\Player  $player
      * @return \Illuminate\Http\Response
      */
-    public function show(Player $player)
+    public function show($player_id)
     {
+
+        $player = Player::find($player_id);
+
+        if (!$player)
+            return response()->json(['error' => true, 'message' => "Player not found"], 201);
+
         return response()->json($player, 200);
     }
 
@@ -57,12 +63,18 @@ class PlayerController extends Controller
      * @param  \App\Models\Player  $player
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Player $player)
+    public function update(Request $request,  $player_id)
     {
+        $player = Player::find($player_id);
+
+        if (!$player)
+            return response()->json(['error' => true, 'message' => "Player not found"], 201);
+
         $player->update([
-            "name" => $request->title,
+            "name" => $request->name,
         ]);
-        return response()->json(['message' => "Oyun Güncellendi"], 201);
+
+        return response()->json(['success' => true, 'player'=>$player], 201);
     }
 
     /**
@@ -71,9 +83,15 @@ class PlayerController extends Controller
      * @param  \App\Models\Player  $player
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Player $player)
+    public function destroy($player_id)
     {
+        $player = Player::find($player_id);
+
+        if (!$player)
+            return response()->json(['error' => true, 'message' => "Player not found"], 201);
+
         $player->delete();
-        return response()->json(['message' => "Oyuncu Silindi"], 200);
+
+        return response()->json(['message' => "Player removed"], 200);
     }
 }

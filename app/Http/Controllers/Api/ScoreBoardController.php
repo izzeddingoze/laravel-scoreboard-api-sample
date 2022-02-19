@@ -27,10 +27,10 @@ class ScoreBoardController extends Controller
          */
 
         if (!Game::find($request->game_id))
-            return response()->json(["success" => false, "message" => "Oyun Bulunamadı"], 404);
+            return response()->json(["success" => false, "message" => "Game Not Found"], 404);
 
-        if (!Player::find($request->game_id))
-            return response()->json(["success" => false, "message" => "Oyuncu Bulunamadı"], 404);
+        if (!Player::find($request->player_id))
+            return response()->json(["success" => false, "message" => "Player Not Found"], 404);
 
 
         $player_game_pivot_rows = PlayerGamePivot::where([
@@ -96,7 +96,7 @@ class ScoreBoardController extends Controller
 
         return response()->json([
             "success" => true,
-            "message" => "Skor eklendi",
+            "message" => "Score added",
             "last_score" => $player_game_pivot_row->last_score,
             "old_rank" => $player_game_pivot_row->old_rank,
             "new_rank" => $player_game_pivot_row->new_rank,
@@ -114,7 +114,7 @@ class ScoreBoardController extends Controller
         $player_game_pivot_data = PlayerGamePivot::where("game_id", $game_id);
 
         if (!$player_game_pivot_data->count() > 0)
-            return response()->json(["error" => "Sonuç Bulunamadı"], 404);
+            return response()->json(["error" => "Not found any data"], 404);
 
         $score_board = $player_game_pivot_data->select("player_id", "new_rank", "last_score")->get()->sortBy("new_rank")->take(25);
         return response()->json($score_board, 200);
